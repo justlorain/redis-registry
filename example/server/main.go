@@ -11,11 +11,8 @@ import (
 )
 
 func main() {
-	// redis 的地址
 	r := redis.NewRedisRegistry("127.0.0.1:6379")
-	// 注册的服务的地址
 	addr := "127.0.0.1:8888"
-
 	h := server.Default(
 		server.WithHostPorts(addr),
 		server.WithRegistry(r, &registry.Info{

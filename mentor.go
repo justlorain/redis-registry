@@ -30,7 +30,6 @@ func newMentor() *mentor {
 	return gm
 }
 
-// subscribe 服务注册时 mentor 订阅 channel，并阻塞监听消息
 func (m *mentor) subscribe(ctx context.Context, info *registry.Info, r *redisRegistry) {
 	sub := r.client.Subscribe(ctx, fmt.Sprintf("/%s/%s/%s", Hertz, info.ServiceName, Server))
 	defer sub.Close()
@@ -41,7 +40,6 @@ func (m *mentor) subscribe(ctx context.Context, info *registry.Info, r *redisReg
 		return
 	default:
 		ch := sub.Channel()
-		// 接收消息，会进行阻塞，一直等待消息
 		for msg := range ch {
 			split := strings.Split(msg.Payload, "-")
 			if split[0] == Register {

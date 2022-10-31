@@ -38,10 +38,7 @@ func NewRedisRegistry(addr string, opts ...Option) registry.Registry {
 	}
 }
 
-// Register 注册时调用
-// 注意：redis 节点和 服务地址都有可能有多个
 func (r *redisRegistry) Register(info *registry.Info) error {
-	// 参数校验
 	if err := validateRegistryInfo(info); err != nil {
 		return err
 	}
@@ -52,28 +49,24 @@ func (r *redisRegistry) Register(info *registry.Info) error {
 	go m.subscribe(rctx.ctx, info, r)
 	r.wg.Wait()
 
-	// 获取 client
 	rdb := r.client
 	hash, err := prepareRegistryHash(info)
 	if err != nil {
 		return err
 	}
-	// 设置 key 并发布消息
+
 	r.mu.Lock()
 	r.rctx = &rctx
 	rdb.HSet(rctx.ctx, hash.key, hash.field, hash.value)
 	rdb.Expire(rctx.ctx, hash.key, DefaultExpireTime)
-	// 发布消息，通知 mentor 保存到 form 中
 	rdb.Publish(rctx.ctx, hash.key, fmt.Sprintf("%s-%s-%s", Register, info.ServiceName, info.Addr.String()))
 	r.mu.Unlock()
 
-	// 定期延长
 	go m.monitorTTL(rctx.ctx, hash, info, r)
 	go keepAlive(rctx.ctx, hash, r)
 	return nil
 }
 
-// Deregister 下线时调用
 func (r *redisRegistry) Deregister(info *registry.Info) error {
 	if err := validateRegistryInfo(info); err != nil {
 		return err

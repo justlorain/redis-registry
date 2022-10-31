@@ -75,10 +75,10 @@ type registryHash struct {
 }
 
 type registryInfo struct {
-	serviceName string
-	addr        string
-	weight      int
-	tags        map[string]string
+	ServiceName string
+	Addr        string
+	Weight      int
+	Tags        map[string]string
 }
 
 // validateRegistryInfo Validate the registry.Info
@@ -95,9 +95,7 @@ func validateRegistryInfo(info *registry.Info) error {
 	return nil
 }
 
-// prepareRegistryHash 准备存入 redis 的 hash 结构信息
 func prepareRegistryHash(info *registry.Info) (*registryHash, error) {
-	// value 为 服务名，服务地址，权重，tagsJSON序列化后的数据
 	meta, err := json.Marshal(convertInfo(info))
 	if err != nil {
 		return nil, err
@@ -112,10 +110,10 @@ func prepareRegistryHash(info *registry.Info) (*registryHash, error) {
 
 func convertInfo(info *registry.Info) *registryInfo {
 	return &registryInfo{
-		serviceName: info.ServiceName,
-		addr:        info.Addr.String(),
-		weight:      info.Weight,
-		tags:        info.Tags,
+		ServiceName: info.ServiceName,
+		Addr:        info.Addr.String(),
+		Weight:      info.Weight,
+		Tags:        info.Tags,
 	}
 }
 
