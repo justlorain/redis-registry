@@ -1,3 +1,3 @@
-# redis (*This is a community driven project*)
+# redis-registry
 
 Redis as service discovery for Hertz.
