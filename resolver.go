@@ -16,6 +16,7 @@ type redisResolver struct {
 	client *redis.Client
 }
 
+// NewRedisResolver create a redis resolver
 func NewRedisResolver(addr string, opts ...Option) discovery.Resolver {
 	redisOpts := &redis.Options{Addr: addr}
 	for _, opt := range opts {
