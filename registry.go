@@ -3,9 +3,10 @@ package redis
 import (
 	"context"
 	"fmt"
+	"sync"
+
 	"github.com/cloudwego/hertz/pkg/app/server/registry"
 	"github.com/go-redis/redis/v8"
-	"sync"
 )
 
 var _ registry.Registry = (*redisRegistry)(nil)
@@ -48,20 +49,17 @@ func (r *redisRegistry) Register(info *registry.Info) error {
 	r.wg.Add(1)
 	go m.subscribe(rctx.ctx, info, r)
 	r.wg.Wait()
-
 	rdb := r.client
 	hash, err := prepareRegistryHash(info)
 	if err != nil {
 		return err
 	}
-
 	r.mu.Lock()
 	r.rctx = &rctx
 	rdb.HSet(rctx.ctx, hash.key, hash.field, hash.value)
 	rdb.Expire(rctx.ctx, hash.key, defaultExpireTime)
 	rdb.Publish(rctx.ctx, hash.key, fmt.Sprintf("%s-%s-%s", register, info.ServiceName, info.Addr.String()))
 	r.mu.Unlock()
-
 	go m.monitorTTL(rctx.ctx, hash, info, r)
 	go keepAlive(rctx.ctx, hash, r)
 	return nil

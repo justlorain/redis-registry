@@ -5,10 +5,11 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/cloudwego/hertz/pkg/app/server/registry"
-	"github.com/go-redis/redis/v8"
 	"net"
 	"time"
+
+	"github.com/cloudwego/hertz/pkg/app/server/registry"
+	"github.com/go-redis/redis/v8"
 )
 
 const (
@@ -73,7 +74,6 @@ type registryHash struct {
 	value string
 }
 
-// TODO: 测试 JSON tag
 type registryInfo struct {
 	ServiceName string            `json:"service_name"`
 	Addr        string            `json:"addr"`
@@ -81,7 +81,6 @@ type registryInfo struct {
 	Tags        map[string]string `json:"tags"`
 }
 
-// validateRegistryInfo Validate the registry.Info
 func validateRegistryInfo(info *registry.Info) error {
 	if info == nil {
 		return fmt.Errorf("registry.Info can not be empty")
@@ -101,7 +100,6 @@ func prepareRegistryHash(info *registry.Info) (*registryHash, error) {
 		return nil, err
 	}
 	return &registryHash{
-		// /hertz/service-name/service-type
 		key:   fmt.Sprintf("/hertz/%s/%s", info.ServiceName, server),
 		field: info.Addr.String(),
 		value: string(meta),

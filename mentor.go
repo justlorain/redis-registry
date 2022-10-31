@@ -3,13 +3,13 @@ package redis
 import (
 	"context"
 	"fmt"
-	"github.com/cloudwego/hertz/pkg/app/server/registry"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"strings"
 	"time"
+
+	"github.com/cloudwego/hertz/pkg/app/server/registry"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-// gm global mentor
 var gm *mentor
 
 var form = make(map[string]addrs)
@@ -34,7 +34,6 @@ func (m *mentor) subscribe(ctx context.Context, info *registry.Info, r *redisReg
 	sub := r.client.Subscribe(ctx, fmt.Sprintf("/%s/%s/%s", hertz, info.ServiceName, server))
 	defer sub.Close()
 	r.wg.Done()
-
 	select {
 	case <-ctx.Done():
 		return

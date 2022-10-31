@@ -3,11 +3,12 @@ package redis
 import (
 	"context"
 	"encoding/json"
+	"testing"
+
 	"github.com/cloudwego/hertz/pkg/app/server/registry"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var redisCli *redis.Client
