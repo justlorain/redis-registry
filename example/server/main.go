@@ -13,13 +13,19 @@ import (
 func main() {
 	r := redis.NewRedisRegistry("127.0.0.1:6379")
 	addr := "127.0.0.1:8888"
+
+	tags := map[string]string{
+		"hello":     "world",
+		"cloudwego": "hertz",
+	}
+
 	h := server.Default(
 		server.WithHostPorts(addr),
 		server.WithRegistry(r, &registry.Info{
-			ServiceName: "hertz.test.demo", // 可以通过服务名称访问服务的地址
+			ServiceName: "hertz.test.demo",
 			Addr:        utils.NewNetAddr("tcp", addr),
 			Weight:      10,
-			Tags:        nil,
+			Tags:        tags,
 		}),
 	)
 	h.GET("/ping", func(_ context.Context, ctx *app.RequestContext) {

@@ -31,7 +31,7 @@ func newMentor() *mentor {
 }
 
 func (m *mentor) subscribe(ctx context.Context, info *registry.Info, r *redisRegistry) {
-	sub := r.client.Subscribe(ctx, fmt.Sprintf("/%s/%s/%s", Hertz, info.ServiceName, Server))
+	sub := r.client.Subscribe(ctx, fmt.Sprintf("/%s/%s/%s", hertz, info.ServiceName, server))
 	defer sub.Close()
 	r.wg.Done()
 
@@ -42,10 +42,10 @@ func (m *mentor) subscribe(ctx context.Context, info *registry.Info, r *redisReg
 		ch := sub.Channel()
 		for msg := range ch {
 			split := strings.Split(msg.Payload, "-")
-			if split[0] == Register {
+			if split[0] == register {
 				m.insertForm(split[1], split[2])
 				hlog.Infof("HERTZ: service info %v", m.mform)
-			} else if split[0] == Deregister {
+			} else if split[0] == deregister {
 				m.removeAddr(split[1], split[2])
 				hlog.Infof("HERTZ: service info %v", m.mform)
 			} else {
@@ -57,7 +57,7 @@ func (m *mentor) subscribe(ctx context.Context, info *registry.Info, r *redisReg
 }
 
 func (m *mentor) monitorTTL(ctx context.Context, hash *registryHash, info *registry.Info, r *redisRegistry) {
-	ticker := time.NewTicker(DefaultMonitorTime)
+	ticker := time.NewTicker(defaultMonitorTime)
 	defer ticker.Stop()
 	for {
 		select {

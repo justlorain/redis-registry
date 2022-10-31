@@ -12,22 +12,21 @@ import (
 )
 
 const (
-	Register   = "register"
-	Deregister = "deregister"
-	Hertz      = "hertz"
-	Mentor     = "mentor"
-	Server     = "server"
-	Client     = "client"
 	Redis      = "redis"
-	TCP        = "tcp"
+	register   = "register"
+	deregister = "deregister"
+	hertz      = "hertz"
+	server     = "server"
+	client     = "client"
+	tcp        = "tcp"
 )
 
 const (
-	DefaultExpireTime    = time.Second * 60
-	DefaultTickerTime    = time.Second * 30
-	DefaultKeepAliveTime = time.Second * 60
-	DefaultMonitorTime   = time.Second * 30
-	DefaultWeight        = 10
+	defaultExpireTime    = time.Second * 60
+	defaultTickerTime    = time.Second * 30
+	defaultKeepAliveTime = time.Second * 60
+	defaultMonitorTime   = time.Second * 30
+	defaultWeight        = 10
 )
 
 type Option func(opts *redis.Options)
@@ -74,11 +73,12 @@ type registryHash struct {
 	value string
 }
 
+// TODO: 测试 JSON tag
 type registryInfo struct {
-	ServiceName string
-	Addr        string
-	Weight      int
-	Tags        map[string]string
+	ServiceName string            `json:"service_name"`
+	Addr        string            `json:"addr"`
+	Weight      int               `json:"weight"`
+	Tags        map[string]string `json:"tags"`
 }
 
 // validateRegistryInfo Validate the registry.Info
@@ -102,7 +102,7 @@ func prepareRegistryHash(info *registry.Info) (*registryHash, error) {
 	}
 	return &registryHash{
 		// /hertz/service-name/service-type
-		key:   fmt.Sprintf("/hertz/%s/%s", info.ServiceName, Server),
+		key:   fmt.Sprintf("/hertz/%s/%s", info.ServiceName, server),
 		field: info.Addr.String(),
 		value: string(meta),
 	}, nil
@@ -118,12 +118,12 @@ func convertInfo(info *registry.Info) *registryInfo {
 }
 
 func keepAlive(ctx context.Context, hash *registryHash, r *redisRegistry) {
-	ticker := time.NewTicker(DefaultTickerTime)
+	ticker := time.NewTicker(defaultTickerTime)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			r.client.Expire(ctx, hash.key, DefaultKeepAliveTime)
+			r.client.Expire(ctx, hash.key, defaultKeepAliveTime)
 		case <-ctx.Done():
 			break
 		default:

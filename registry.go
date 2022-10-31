@@ -58,8 +58,8 @@ func (r *redisRegistry) Register(info *registry.Info) error {
 	r.mu.Lock()
 	r.rctx = &rctx
 	rdb.HSet(rctx.ctx, hash.key, hash.field, hash.value)
-	rdb.Expire(rctx.ctx, hash.key, DefaultExpireTime)
-	rdb.Publish(rctx.ctx, hash.key, fmt.Sprintf("%s-%s-%s", Register, info.ServiceName, info.Addr.String()))
+	rdb.Expire(rctx.ctx, hash.key, defaultExpireTime)
+	rdb.Publish(rctx.ctx, hash.key, fmt.Sprintf("%s-%s-%s", register, info.ServiceName, info.Addr.String()))
 	r.mu.Unlock()
 
 	go m.monitorTTL(rctx.ctx, hash, info, r)
@@ -79,7 +79,7 @@ func (r *redisRegistry) Deregister(info *registry.Info) error {
 	}
 	r.mu.Lock()
 	rdb.HDel(rctx.ctx, hash.key, hash.field)
-	rdb.Publish(rctx.ctx, hash.key, fmt.Sprintf("%s-%s-%s", Deregister, info.ServiceName, info.Addr.String()))
+	rdb.Publish(rctx.ctx, hash.key, fmt.Sprintf("%s-%s-%s", deregister, info.ServiceName, info.Addr.String()))
 	rctx.cancel()
 	r.mu.Unlock()
 	return nil

@@ -32,7 +32,7 @@ func (r *redisResolver) Target(_ context.Context, target *discovery.TargetInfo) 
 
 func (r *redisResolver) Resolve(ctx context.Context, desc string) (discovery.Result, error) {
 	rdb := r.client
-	fvs := rdb.HGetAll(ctx, fmt.Sprintf("/%s/%s/%s", Hertz, desc, Server)).Val()
+	fvs := rdb.HGetAll(ctx, fmt.Sprintf("/%s/%s/%s", hertz, desc, server)).Val()
 	var (
 		ri  registryInfo
 		its []discovery.Instance
@@ -45,9 +45,9 @@ func (r *redisResolver) Resolve(ctx context.Context, desc string) (discovery.Res
 		}
 		weight := ri.Weight
 		if weight <= 0 {
-			weight = DefaultWeight
+			weight = defaultWeight
 		}
-		its = append(its, discovery.NewInstance(TCP, ri.Addr, weight, ri.Tags))
+		its = append(its, discovery.NewInstance(tcp, ri.Addr, weight, ri.Tags))
 	}
 	return discovery.Result{
 		CacheKey:  desc,
