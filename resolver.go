@@ -37,7 +37,6 @@ func (r *redisResolver) Resolve(ctx context.Context, desc string) (discovery.Res
 		ri  registryInfo
 		its []discovery.Instance
 	)
-	// f: Addr; v: JSON
 	for f, v := range fvs {
 		err := json.Unmarshal([]byte(v), &ri)
 		if err != nil {
