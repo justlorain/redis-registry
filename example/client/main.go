@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
+	"registry/redis"
+
 	"github.com/cloudwego/hertz/pkg/app/client"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/client/sd"
 	"github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"registry/redis"
 )
 
 func main() {
