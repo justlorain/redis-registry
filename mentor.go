@@ -66,7 +66,6 @@ func (m *mentor) monitorTTL(ctx context.Context, hash *registryHash, info *regis
 			}
 		case <-ctx.Done():
 			break
-		default:
 		}
 	}
 }

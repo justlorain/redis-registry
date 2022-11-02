@@ -152,10 +152,17 @@ func TestResolve(t *testing.T) {
 			continue
 		}
 		assert.Equal(t, res.CacheKey, test.info.ServiceName)
-		for i, ins := range res.Instances {
-			args := test.info.Args[i]
-			assert.Equal(t, args.Addr, ins.Address().String())
-			assert.Equal(t, args.Weight, ins.Weight())
+		addr := make(map[string]struct{})
+		weight := make(map[int]struct{})
+		for _, arg := range test.info.Args {
+			addr[arg.Addr] = struct{}{}
+			weight[arg.Weight] = struct{}{}
+		}
+		for _, ins := range res.Instances {
+			_, addrOK := addr[ins.Address().String()]
+			_, weightOK := weight[ins.Weight()]
+			assert.True(t, addrOK)
+			assert.True(t, weightOK)
 		}
 	}
 }

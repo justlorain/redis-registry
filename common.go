@@ -124,7 +124,6 @@ func keepAlive(ctx context.Context, hash *registryHash, r *redisRegistry) {
 			r.client.Expire(ctx, hash.key, defaultKeepAliveTime)
 		case <-ctx.Done():
 			break
-		default:
 		}
 	}
 }
