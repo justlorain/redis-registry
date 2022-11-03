@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"registry/redis"
 
 	"github.com/cloudwego/hertz/pkg/app/client"

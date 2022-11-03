@@ -11,8 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var redisCli *redis.Client
-var ctx = context.Background()
+var (
+	redisCli *redis.Client
+	ctx      = context.Background()
+)
 
 func init() {
 	rdb := redis.NewClient(&redis.Options{Addr: "127.0.0.1:6379"})
@@ -172,21 +174,4 @@ func TestNewMentor(t *testing.T) {
 	m1 := newMentor()
 	m2 := newMentor()
 	assert.Equal(t, m1, m2)
-}
-
-// TestForm test form operation
-func TestForm(t *testing.T) {
-	m := newMentor()
-	m.insertForm("hertz", "127.0.0.1:8000")
-	m.insertForm("hertz", "127.0.0.1:8001")
-	m.insertForm("cloudwego", "127.0.0.1:9999")
-	assert.Equal(t, map[string]addrs{
-		"hertz":     {"127.0.0.1:8000", "127.0.0.1:8001"},
-		"cloudwego": {"127.0.0.1:9999"},
-	}, m.mform)
-	m.removeService("cloudwego")
-	m.removeAddr("hertz", "127.0.0.1:8001")
-	assert.Equal(t, map[string]addrs{
-		"hertz": {"127.0.0.1:8000"},
-	}, m.mform)
 }
