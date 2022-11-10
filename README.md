@@ -1,6 +1,8 @@
-# redis-registry
+# redis-registry (dev version)
 
 Redis as service discovery for Hertz.
+
+You may refer to [official site](https://github.com/hertz-contrib/registry) for more information.
 
 ## How to use?
 
