@@ -14,12 +14,13 @@ var gm *mentor
 
 var form = make(map[string]addrs)
 
-type addrs []string
-
-type mentor struct {
-	mform map[string]addrs
-	mu    sync.Mutex
-}
+type (
+	addrs  []string
+	mentor struct {
+		mform map[string]addrs
+		mu    sync.Mutex
+	}
+)
 
 // newMentor use singleton
 func newMentor() *mentor {
